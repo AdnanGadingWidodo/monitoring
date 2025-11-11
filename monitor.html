@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Krakatau Andover Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.6/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body x-data="x_data()">
+    <!-- Dashboard Screen (Monitoring or Control) -->
+    <div class="header">
+        <div>
+            <strong><i class="fas fa-ship me-2"></i>KRAKATAU ANDOVER</strong>
+            <template x-if="vehicleData.app_connect">
+                <span class="status-connected"><i class="fas fa-wifi me-1"></i>CONNECTED</span>
+            </template>
+            <template x-if="!vehicleData.app_connect">
+                <span class="status-disconnected"><i class="fas fa-exclamation-circle me-1"></i>DISCONNECTED</span>
+            </template>
+            <br>
+            <br>
+            <div class="waypoinnt" x-show="currentMode === 'control'">
+                <span x-text="vehicleData.current_wp"></span>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-custom p-3">
+                    <div class="card-title"><i class="fas fa-video me-2"></i>SURFACE CAMERA STREAM</div>
+                    <img :key="surfaceCamera.refreshStream" class="image-placeholder" width="90%"
+                        :src="surfaceCamera.streamUrl" alt="Surface Camera" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-custom p-3">
+                    <div class="card-title"><i class="fas fa-water me-2"></i>UNDERWATER CAMERA STREAM</div>
+                    <img class="image-placeholder" width="90%" x-bind:src="underwaterCamera.streamUrl"
+                        alt="Underwater Camera" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-custom p-3">
+                    <div class="card-title"><i class="fas fa-map-marked-alt me-2"></i>TRAJECTORY</div>
+                    <div id="canvasContainer">
+                        <canvas id="gpsCanvas" width="600" height="600"></canvas>
+                    </div>
+                    <div x-show="!gpsTracker.isTracking" class="text-center mt-2">
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card card-custom p-3">
+                    <div class="card-title"><i class="fas fa-tachometer-alt me-2"></i>VEHICLE DATA</div>
+                    <!-- <div class="vehicle-data"> -->
+                    <div class ="vehicle-data">
+                    <div class="text-center">
+                        <i class="fas fa-clock mb-2"></i><b>Time</b><br><span x-text="currentTime"></span>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-calendar mb-2"></i><b>Date</b><br><span x-text="currentDate"></span>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-crosshairs mb-2"></i><b>Latitude</b><br><span x-text="vehicleData.lat"></span>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-crosshairs mb-2"></i><b>Longitude</b><br><span
+                            x-text="vehicleData.long"></span>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-compass mb-2"></i><b>Yaw</b><br><span x-text="vehicleData.yaw"></span>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-balance-scale mb-2"></i><b>Roll</b><br><span x-text="vehicleData.roll"></span>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-battery-three-quarters mb-2"></i><b>Battery</b><br><span
+                            x-text="vehicleData.battery"></span>
+                    </div>
+                    </div>
+                    <!-- </div> -->
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card card-custom p-3">
+                    <div class="card-title"><i class="fas fa-image me-2"></i>SURFACE IMAGE</div>
+                    <img class="image-placeholder" :src="surfaceCamera.image" alt="Surface Image" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-custom p-3">
+                    <div class="card-title"><i class="fas fa-water me-2"></i>UNDERWATER IMAGE</div>
+                    <img class="image-placeholder" :src="underwaterCamera.image" alt="Underwater Image" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.14.8/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>
